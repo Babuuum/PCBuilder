@@ -1,0 +1,9 @@
+Alembic migrations live in this directory.
+
+Create a revision after adding SQLAlchemy models:
+
+    poetry run alembic revision --autogenerate -m "describe change"
+
+Apply migrations:
+
+    poetry run alembic upgrade head
