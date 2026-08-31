@@ -25,8 +25,8 @@ def parse_provider(
     self,
     provider: str,
     part_name: str,
-    limit: int = 20,
-    search_depth: int = 20,
+    limit: int | None = 20,
+    region: str = "Санкт-Петербург",
 ) -> dict[str, Any]:
     started_at = time.perf_counter()
     logger.info(
@@ -35,7 +35,7 @@ def parse_provider(
         provider,
         part_name,
     )
-    raw_items = asyncio.run(run_parser(provider, part_name, limit, search_depth))
+    raw_items = asyncio.run(run_parser(provider, part_name, limit, region))
     logger.info(
         "Parser task completed task_id=%s provider=%s items=%s elapsed=%.2fs",
         self.request.id,
@@ -47,5 +47,12 @@ def parse_provider(
 
 
 @celery_app.task(name="app.tasks.aggregate_search_results")
-def aggregate_search_results(parser_results: list[dict[str, Any]]) -> dict[str, Any]:
-    return {"providers": parser_results}
+def aggregate_search_results(
+    parser_results: list[dict[str, Any]],
+    sort: str,
+) -> dict[str, Any]:
+    items = [item for provider_result in parser_results for item in provider_result["items"]]
+    if sort == "popular":
+        # DNS already returns its catalog in the selected default popularity order.
+        return {"items": items}
+    raise ValueError(f"Unsupported sort type: {sort}")

@@ -24,6 +24,15 @@ class Settings(BaseSettings):
         default="redis://localhost:6379/1", validation_alias="CELERY_RESULT_BACKEND"
     )
     log_level: str = Field(default="INFO", validation_alias="LOG_LEVEL")
+    browser_headless: bool = Field(default=True, validation_alias="BROWSER_HEADLESS")
+    dns_browser_identities: str = Field(
+        default="[]",
+        validation_alias="DNS_BROWSER_IDENTITIES",
+    )
+    search_rate_limit: int = Field(default=10, validation_alias="SEARCH_RATE_LIMIT")
+    search_rate_window_seconds: int = Field(
+        default=60, validation_alias="SEARCH_RATE_WINDOW_SECONDS"
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",
