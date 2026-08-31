@@ -12,10 +12,12 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/1
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      BROWSER_HEADLESS: ${BROWSER_HEADLESS:-true}
+      DNS_BROWSER_IDENTITIES: ${DNS_BROWSER_IDENTITIES:-[]}
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - .:/app:z
     depends_on:
       db:
         condition: service_healthy
@@ -50,8 +52,10 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/1
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      BROWSER_HEADLESS: ${BROWSER_HEADLESS:-true}
+      DNS_BROWSER_IDENTITIES: ${DNS_BROWSER_IDENTITIES:-[]}
     volumes:
-      - .:/app
+      - .:/app:z
     depends_on:
       db:
         condition: service_healthy
@@ -60,8 +64,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:

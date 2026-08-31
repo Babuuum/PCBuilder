@@ -17,3 +17,5 @@ task.txt
 *.sqlite
 *.sqlite3
 postgres_data/
+models.txt
+neuro.txt
